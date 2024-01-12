@@ -3,7 +3,7 @@ import styles from "./Searchbar.module.css";
 
 class Searchbar extends Component {
     state = {
-        
+      search: '',  
     }
 
     componentDidMount() {
@@ -13,22 +13,33 @@ class Searchbar extends Component {
     componentDidUpdate(prevProps, prevState) {
         
     }
+    handleSubmit = (evt) => {
+      evt.preventDefault()
+      console.log('mumu')
+      this.props.onSubmit(this.state.search)
+    }
 
+    handleChange = ({target}) => {
+      console.log(target.value)
+      this.setState({
+        search: target.value
+    })
+    }
     
     render() {
-        
+        const {handleSubmit, handleChange} = this
         return (
             <header className={styles.searchbar}>
-  <form className={styles.searchForm}>
-    <button type="submit" className={styles.searchFormButton}>
+  <form className={styles.searchForm} onSubmit={handleSubmit}>
+    <button type="submit" className={styles.searchFormButton} >
       <span className={styles.searchFormButtonLabel}>Search</span>
     </button>
 
     <input className={styles.searchFormInput}
-      
-      type="text"
-      autocomplete="off"
-      autofocus
+      onChange={handleChange}
+      type="text" 
+      // autocomplete="off"
+      // autofocus
       placeholder="Search images and photos"
     />
   </form>
