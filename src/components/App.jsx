@@ -1,103 +1,71 @@
-// export const App = () => {
-//   return (
-//     <div
-//       style={{
-//         height: '100vh',
-//         display: 'flex',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         fontSize: 40,
-//         color: '#010101'
-//       }}
-//     >
-//       React homework template
-//     </div>
-//   );
-// };
-import { Component } from "react";
-import Searchbar from "./Searchbar/Searchbar";
-import ImageGallery from "./ImageGallery/ImageGalleryj";
-
-// import MyBooksForm from "./MyBooksForm/MyBooksForm";
-
-
-import styles from "./App.module.css";
-// const KEY_API = '40910000-bc8f7501355e0c431b692ba0e'
+import { Component } from 'react';
+import Searchbar from './Searchbar/Searchbar';
+import ImageGallery from './ImageGallery/ImageGalleryj';
+import searchImg from '../api/api';
+import styles from './App.module.css';
 
 class App extends Component {
-    state = {
-      images: [
-        {id: 195893 ,
-        largeImageURL: "",
-        webformatURL: '',
-        tags: "blossom",
-    },
-    {id: 195999 ,
-    largeImageURL: "",
-    webformatURL: '',
-    tags: "flower",
-}
-      ],
-       search: '',
-    }
+  state = {
+    images: [],
+    search: '',
+    loading: false,
+    error: null,
+    page: 1,
+    modalOpen: false,
+  };
 
-    componentDidMount() {
-        
-    }
+  componentDidMount() {}
 
-    componentDidUpdate(prevProps, prevState) {
-        
+  async componentDidUpdate(_, prevState) {
+    const { search, page } = this.state;
+    if (search && (search !== prevState.search || page !== prevState.page)) {
+      this.fetchImgs();
     }
-// searchImg = (evt) => {
-//     console.log(evt)
-//     this.setState({search: evt.target.value})
-// }
-// addSearch = (searchValue) => {
-//     console.log('qwe')
-//     this.setState(({images}) => {
-//         return {images: [...images, data]}
-//     })
-// }
+  }
 
-
-    addSearch = (searchValue) => {
-        console.log('qwe')
-        this.setState({search: searchValue})
+  async fetchImgs() {
+    const { search, page } = this.state;
+    try {
+      //   this.setState({ loading: true });
+      const imagesApi = await searchImg(search, page);
+      const { hits } = imagesApi;
+      console.log(hits);
+      const newhits = hits.map(hit => ({
+        id: hit.id,
+        tags: hit.tags,
+        url: hit.webformatURL,
+        urlModal: hit.largeImageURL,
+      }));
+      console.log(newhits);
+      this.setState(({ images }) => ({
+        images: newhits?.length ? [...images, ...newhits] : images,
+      }));
+    } catch (error) {
+      this.setState({
+        error: error.message,
+      });
+    } finally {
+      //   this.setState({
+      //     loading: false,
+      //   });
     }
+  }
 
-    render() {
-        const {state, addSearch} = this
-        return (
-            <>
-            <Searchbar search={state.search} onSubmit={addSearch}/>
-            <div className={styles.app}>
-            <ImageGallery items={state.images} />
-            </div>
-            </> 
-             
-            
-        )
-    }
+  addSearch = searchValue => {
+    console.log('qwe');
+    this.setState({ search: searchValue });
+  };
+
+  render() {
+    const { state, addSearch } = this;
+    return (
+      <div className={styles.app}>
+        <Searchbar search={state.search} onSubmit={addSearch} />
+
+        <ImageGallery items={state.images} />
+      </div>
+    );
+  }
 }
 
 export default App;
-
-// 
-
-    // getFilteredBooks() {
-    //     const { filter, books } = this.state;
-    //     if (!filter) {
-    //         return books;
-    //     }
-
-    //     const normalizedFilter = filter.toLowerCase();
-
-    //     const filteredBooks = books.filter(({ title, author }) => {
-    //         const normalizedTitle = title.toLowerCase();
-    //         const normalizedAuthor = author.toLowerCase();
-
-    //         return (normalizedAuthor.includes(normalizedFilter) || normalizedTitle.includes(normalizedFilter))
-    //     });
-
-    //     return filteredBooks;
-    // }
