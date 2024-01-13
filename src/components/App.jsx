@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGalleryj';
+import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 import searchImg from '../api/api';
 import styles from './App.module.css';
 
@@ -26,7 +28,7 @@ class App extends Component {
   async fetchImgs() {
     const { search, page } = this.state;
     try {
-      //   this.setState({ loading: true });
+      this.setState({ loading: true });
       const imagesApi = await searchImg(search, page);
       const { hits } = imagesApi;
       console.log(hits);
@@ -45,9 +47,9 @@ class App extends Component {
         error: error.message,
       });
     } finally {
-      //   this.setState({
-      //     loading: false,
-      //   });
+      this.setState({
+        loading: false,
+      });
     }
   }
 
@@ -56,14 +58,40 @@ class App extends Component {
     this.setState({ search: searchValue });
   };
 
-  render() {
-    const { state, addSearch } = this;
-    return (
-      <div className={styles.app}>
-        <Searchbar search={state.search} onSubmit={addSearch} />
+  showModal = () => {
+    this.setState({
+      modalOpen: true,
+      // postDetails: {
+      //     title,
+      //     body,
+      // }
+    });
+  };
 
-        <ImageGallery items={state.images} />
-      </div>
+  closeModal = () => {
+    this.setState({
+      modalOpen: false,
+    });
+  };
+
+  render() {
+    const { state, addSearch, closeModal, showModal } = this;
+    return (
+      <>
+        <div className={styles.app}>
+          <Searchbar search={state.search} onSubmit={addSearch} />
+          {state.loading && <Loader />}
+
+          <ImageGallery items={state.images} showModal={showModal} />
+        </div>
+        {state.modalOpen && (
+          <Modal
+            urlModal={state.images.urlModal}
+            tags={state.images.tags}
+            close={closeModal}
+          />
+        )}
+      </>
     );
   }
 }
