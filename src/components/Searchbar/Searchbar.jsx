@@ -6,9 +6,6 @@ class Searchbar extends Component {
     search: '',
   };
 
-  componentDidMount() {}
-
-  componentDidUpdate(prevProps, prevState) {}
   handleSubmit = evt => {
     evt.preventDefault();
     console.log('mumu');

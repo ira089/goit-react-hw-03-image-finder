@@ -9,7 +9,7 @@ const ImageGallery = ({ items, showModal }) => {
       url={item.url}
       alt={item.tags}
       urlModal={item.urlModal}
-      showModal={showModal}
+      // showModal={showModal}
     />
   ));
   return <ul className={styles.imageGallery}>{elements}</ul>;

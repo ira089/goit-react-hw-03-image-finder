@@ -2,7 +2,8 @@ import { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGalleryj';
 import Loader from './Loader/Loader';
-import Modal from './Modal/Modal';
+import Button from './Button/Button';
+// import Modal from './Modal/Modal';
 import searchImg from '../api/api';
 import styles from './App.module.css';
 
@@ -58,39 +59,40 @@ class App extends Component {
     this.setState({ search: searchValue });
   };
 
-  showModal = () => {
-    this.setState({
-      modalOpen: true,
-      // postDetails: {
-      //     title,
-      //     body,
-      // }
-    });
+  addPag = () => {
+    console.log('first');
+    this.setState(({ page }) => ({ page: page + 1 }));
   };
 
-  closeModal = () => {
-    this.setState({
-      modalOpen: false,
-    });
-  };
+  //   showModal = () => {
+  //     this.setState({
+  //       modalOpen: true,
+  //       // postDetails: {
+  //       //     title,
+  //       //     body,
+  //       // }
+  //     });
+  //   };
+
+  //   closeModal = () => {
+  //     this.setState({
+  //       modalOpen: false,
+  //     });
+  //   };
 
   render() {
-    const { state, addSearch, closeModal, showModal } = this;
+    const { state, addSearch, addPag } = this;
+    const { search, images } = this.state;
+    const isImages = Boolean(images.length);
     return (
       <>
         <div className={styles.app}>
-          <Searchbar search={state.search} onSubmit={addSearch} />
+          <Searchbar search={search} onSubmit={addSearch} />
           {state.loading && <Loader />}
 
-          <ImageGallery items={state.images} showModal={showModal} />
+          <ImageGallery items={images} />
         </div>
-        {state.modalOpen && (
-          <Modal
-            urlModal={state.images.urlModal}
-            tags={state.images.tags}
-            close={closeModal}
-          />
-        )}
+        {isImages && <Button onButton={addPag} />}
       </>
     );
   }
