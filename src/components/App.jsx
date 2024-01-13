@@ -64,22 +64,6 @@ class App extends Component {
     this.setState(({ page }) => ({ page: page + 1 }));
   };
 
-  //   showModal = () => {
-  //     this.setState({
-  //       modalOpen: true,
-  //       // postDetails: {
-  //       //     title,
-  //       //     body,
-  //       // }
-  //     });
-  //   };
-
-  //   closeModal = () => {
-  //     this.setState({
-  //       modalOpen: false,
-  //     });
-  //   };
-
   render() {
     const { state, addSearch, addPag } = this;
     const { search, images } = this.state;
@@ -92,7 +76,7 @@ class App extends Component {
 
           <ImageGallery items={images} />
         </div>
-        {isImages && <Button onButton={addPag} />}
+        {isImages && <Button onClick={addPag}>Load more</Button>}
       </>
     );
   }

@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { SiSearxng } from 'react-icons/si';
 import styles from './Searchbar.module.css';
 
 class Searchbar extends Component {
@@ -25,7 +26,9 @@ class Searchbar extends Component {
       <header className={styles.searchbar}>
         <form className={styles.searchForm} onSubmit={handleSubmit}>
           <button type="submit" className={styles.searchFormButton}>
-            <span className={styles.searchFormButtonLabel}>Search</span>
+            <span className={styles.searchFormButtonLabel}>
+              <SiSearxng />
+            </span>
           </button>
 
           <input
@@ -44,3 +47,6 @@ class Searchbar extends Component {
 }
 
 export default Searchbar;
+{
+  /* <SiSearxng /> */
+}
