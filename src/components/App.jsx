@@ -9,15 +9,22 @@ import Button from './Button/Button';
 import searchImg from '../api/api';
 import styles from './App.module.css';
 
+const STATUS = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  REJECTED: 'rejected',
+  RESOLVED: 'resolved',
+};
+
 class App extends Component {
   state = {
     images: [],
     search: '',
-    loading: false,
-    error: null,
+    // loading: false,
+    // error: null,
     page: 1,
-    modalOpen: false,
-    status: 'idle',
+    // modalOpen: false,
+    status: STATUS.IDLE,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -30,8 +37,8 @@ class App extends Component {
   async fetchImgs() {
     const { search, page } = this.state;
     try {
-      this.setState({ loading: true });
-      // this.setState({status: 'pending'})
+      // this.setState({ loading: true });
+      this.setState({ status: STATUS.PENDING });
       const imagesApi = await searchImg(search, page);
       const { hits } = imagesApi;
       // console.log(hits);
@@ -44,16 +51,12 @@ class App extends Component {
       // console.log(newhits);
       this.setState(({ images }) => ({
         images: newhits?.length ? [...images, ...newhits] : images,
-        status: 'resolved',
+        status: STATUS.RESOLVED,
       }));
     } catch (error) {
       this.setState({
         error: error.message,
-        status: 'rejected',
-      });
-    } finally {
-      this.setState({
-        loading: false,
+        status: STATUS.REJECTED,
       });
     }
   }
@@ -61,6 +64,7 @@ class App extends Component {
   addSearch = searchValue => {
     // console.log('qwe');
     this.setState({ search: searchValue, page: 1, images: [] });
+    // this.setState({ search: searchValue });
   };
 
   addPag = () => {
@@ -69,28 +73,31 @@ class App extends Component {
   };
 
   render() {
-    const { state, addSearch, addPag } = this;
-    const { search, images, error } = this.state;
+    const { addSearch, addPag } = this;
+    const { search, images } = this.state;
     const isImages = Boolean(images.length);
 
-    // if (this.state.status === 'pending') return <Loader />
-    // else if (this.state.status === 'resolved') return  <ImageGallery items={images} />
-    // else if (this.state.status === 'rejected')
-    //   return <p className={styles.error}>Error!</p>;
-
-    return (
-      <>
-        <div className={styles.app}>
+    if (this.state.status === STATUS.IDLE)
+      return (
+        <>
           <Searchbar search={search} onSubmit={addSearch} />
-          {error && <p className={styles.error}>Error!</p>}
-          {state.loading && <Loader />}
+          <ToastContainer autoClose={3000} />
+        </>
+      );
 
-          <ImageGallery items={images} />
-        </div>
-        {isImages && <Button onClick={addPag}>Load more</Button>}
-        <ToastContainer autoClose={3000} />
-      </>
-    );
+    if (this.state.status === STATUS.PENDING) return <Loader />;
+    if (this.state.status === STATUS.RESOLVED)
+      return (
+        <>
+          <div className={styles.app}>
+            <Searchbar search={search} onSubmit={addSearch} />
+            <ImageGallery items={images} />
+          </div>
+          {isImages && <Button onClick={addPag}>Load more</Button>}
+        </>
+      );
+    if (this.state.status === STATUS.REJECTED)
+      return <p className={styles.error}>Error!</p>;
   }
 }
 
