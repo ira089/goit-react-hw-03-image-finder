@@ -1,7 +1,9 @@
 import { Component } from 'react';
 import { SiSearxng } from 'react-icons/si';
+// import { toast } from 'react-toastify';
 
 import styles from './Searchbar.module.css';
+import { toast } from 'react-toastify';
 
 class Searchbar extends Component {
   state = {
@@ -10,8 +12,13 @@ class Searchbar extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
+    if (this.state.search.trim() === '') {
+      toast.error('Fill in the search field.');
+      return;
+    }
 
     this.props.onSubmit(this.state.search);
+    this.setState({ search: '' });
   };
 
   handleChange = ({ target }) => {
@@ -27,7 +34,7 @@ class Searchbar extends Component {
       <header className={styles.searchbar}>
         <form className={styles.searchForm} onSubmit={handleSubmit}>
           <button type="submit" className={styles.searchFormButton}>
-            <SiSearxng />
+            <SiSearxng style={{ color: 'aqua', width: 30, height: 30 }} />
 
             <span className={styles.searchFormButtonLabel}></span>
           </button>

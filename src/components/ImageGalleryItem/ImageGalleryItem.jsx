@@ -18,7 +18,7 @@ class ImageGalleryItem extends Component {
     });
   };
   render() {
-    const { id, url, tags, urlModal } = this.props;
+    const { id, url, tags, urlModal } = this.props.item;
     const { modalOpen } = this.state;
     return (
       <>
@@ -29,7 +29,9 @@ class ImageGalleryItem extends Component {
         >
           <img className={styles.imageGalleryItemImage} src={url} alt={tags} />
         </li>
-        {modalOpen && <Modal urlModal={urlModal} close={this.closeModal} />}
+        {modalOpen && (
+          <Modal urlModal={urlModal} close={this.closeModal} alt={tags} />
+        )}
       </>
     );
   }

@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGalleryj';
 import Loader from './Loader/Loader';
@@ -15,6 +17,7 @@ class App extends Component {
     error: null,
     page: 1,
     modalOpen: false,
+    status: 'idle',
   };
 
   async componentDidUpdate(_, prevState) {
@@ -28,6 +31,7 @@ class App extends Component {
     const { search, page } = this.state;
     try {
       this.setState({ loading: true });
+      // this.setState({status: 'pending'})
       const imagesApi = await searchImg(search, page);
       const { hits } = imagesApi;
       // console.log(hits);
@@ -40,10 +44,12 @@ class App extends Component {
       // console.log(newhits);
       this.setState(({ images }) => ({
         images: newhits?.length ? [...images, ...newhits] : images,
+        status: 'resolved',
       }));
     } catch (error) {
       this.setState({
         error: error.message,
+        status: 'rejected',
       });
     } finally {
       this.setState({
@@ -64,17 +70,25 @@ class App extends Component {
 
   render() {
     const { state, addSearch, addPag } = this;
-    const { search, images } = this.state;
+    const { search, images, error } = this.state;
     const isImages = Boolean(images.length);
+
+    // if (this.state.status === 'pending') return <Loader />
+    // else if (this.state.status === 'resolved') return  <ImageGallery items={images} />
+    // else if (this.state.status === 'rejected')
+    //   return <p className={styles.error}>Error!</p>;
+
     return (
       <>
         <div className={styles.app}>
           <Searchbar search={search} onSubmit={addSearch} />
+          {error && <p className={styles.error}>Error!</p>}
           {state.loading && <Loader />}
 
           <ImageGallery items={images} />
         </div>
         {isImages && <Button onClick={addPag}>Load more</Button>}
+        <ToastContainer autoClose={3000} />
       </>
     );
   }

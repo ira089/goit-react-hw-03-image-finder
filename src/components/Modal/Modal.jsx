@@ -19,12 +19,12 @@ class Modal extends Component {
     }
   };
   render() {
-    console.log(this.props);
-    const { urlModal } = this.props;
+    // console.log(this.props);
+    const { urlModal, alt } = this.props;
     return (
       <div onClick={this.closeModal} className={styles.overlay}>
         <div className={styles.modal}>
-          <img src={urlModal} alt="" />
+          <img src={urlModal} alt={alt} />
         </div>
       </div>
     );
