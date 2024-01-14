@@ -17,8 +17,6 @@ class App extends Component {
     modalOpen: false,
   };
 
-  componentDidMount() {}
-
   async componentDidUpdate(_, prevState) {
     const { search, page } = this.state;
     if (search && (search !== prevState.search || page !== prevState.page)) {
@@ -32,14 +30,14 @@ class App extends Component {
       this.setState({ loading: true });
       const imagesApi = await searchImg(search, page);
       const { hits } = imagesApi;
-      console.log(hits);
+      // console.log(hits);
       const newhits = hits.map(hit => ({
         id: hit.id,
         tags: hit.tags,
         url: hit.webformatURL,
         urlModal: hit.largeImageURL,
       }));
-      console.log(newhits);
+      // console.log(newhits);
       this.setState(({ images }) => ({
         images: newhits?.length ? [...images, ...newhits] : images,
       }));
@@ -55,12 +53,12 @@ class App extends Component {
   }
 
   addSearch = searchValue => {
-    console.log('qwe');
-    this.setState({ search: searchValue });
+    // console.log('qwe');
+    this.setState({ search: searchValue, page: 1, images: [] });
   };
 
   addPag = () => {
-    console.log('first');
+    // console.log('first');
     this.setState(({ page }) => ({ page: page + 1 }));
   };
 

@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { SiSearxng } from 'react-icons/si';
+
 import styles from './Searchbar.module.css';
 
 class Searchbar extends Component {
@@ -9,12 +10,12 @@ class Searchbar extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    console.log('mumu');
+
     this.props.onSubmit(this.state.search);
   };
 
   handleChange = ({ target }) => {
-    console.log(target.value);
+    // console.log(target.value);
     this.setState({
       search: target.value,
     });
@@ -26,9 +27,9 @@ class Searchbar extends Component {
       <header className={styles.searchbar}>
         <form className={styles.searchForm} onSubmit={handleSubmit}>
           <button type="submit" className={styles.searchFormButton}>
-            <span className={styles.searchFormButtonLabel}>
-              <SiSearxng />
-            </span>
+            <SiSearxng />
+
+            <span className={styles.searchFormButtonLabel}></span>
           </button>
 
           <input
